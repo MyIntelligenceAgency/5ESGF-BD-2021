@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using DlxLib;
 using System.IO;
-using System.Text.Encoding.CodePages;
+
 
 namespace ESGF.Sudoku.Spark.Dancinlinks
 {
@@ -12,10 +12,10 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
     {
         //static readonly string _dataPath = Path.Combine("/Users/yassine/Documents/GitHub/5ESGF-BD-2021/", "sudoku.csv");
 
+
         private static void Main()
         {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            var enc1252 = Encoding.GetEncoding(1252);
+
 
 
             // http://puzzles.telegraph.co.uk/site/search_puzzle_number?id=27744

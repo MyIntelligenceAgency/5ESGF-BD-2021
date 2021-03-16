@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-//using System.Text.Encoding;
 
-namespace ESGF.Sudoku.Spark.Dancinlinks
-
+namespace SudokuDlxConsole
 {
     public class Grid
     {
         private const char SpaceCharacter = ' ';
         private const char ZeroCharacter = '0';
-        private static readonly char[] ValidChars = { SpaceCharacter, '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        private static readonly char[] ValidChars = {SpaceCharacter, '1', '2', '3', '4', '5', '6', '7', '8', '9' };
         private readonly IImmutableList<IImmutableList<int>> _rows;
 
         public Grid(IImmutableList<string> rowStrings)
@@ -45,12 +43,6 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             return _rows[row][col];
         }
 
-        private static void DrawSeparatorLine(string first, string last, string sep)
-        {
-            var part = string.Concat(Enumerable.Repeat(CentreHorizontal, 3));
-            DrawLine(first, last, sep, part, part, part);
-        }
-
         public void Draw()
         {
             DrawSeparatorLine(CornerTopLeft, CornerTopRight, HorizontalAndDown);
@@ -67,9 +59,6 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             DrawRow(8);
             DrawSeparatorLine(CornerBottomLeft, CornerBottomRight, HorizontalAndUp);
         }
-
-
-        //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
         private static readonly Encoding Encoding850 = Encoding.GetEncoding(850);
         private static readonly string CornerTopLeft = Encoding850.GetString(new byte[] { 218 });
@@ -95,6 +84,12 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
         private string FormatThreeValues(int row, int skip)
         {
             return string.Concat(_rows[row].Skip(skip).Take(3)).Replace(ZeroCharacter, SpaceCharacter);
+        }
+
+        private static void DrawSeparatorLine(string first, string last, string sep)
+        {
+            var part = string.Concat(Enumerable.Repeat(CentreHorizontal, 3));
+            DrawLine(first, last, sep, part, part, part);
         }
 
         private static void DrawLine(
