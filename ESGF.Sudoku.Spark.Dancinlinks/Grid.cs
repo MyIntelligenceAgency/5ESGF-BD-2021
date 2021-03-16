@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-//using System.Text.Encoding;
 
 namespace ESGF.Sudoku.Spark.Dancinlinks
 
@@ -71,18 +70,18 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
         //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-        private static readonly Encoding Encoding850 = Encoding.GetEncoding(850);
-        private static readonly string CornerTopLeft = Encoding850.GetString(new byte[] { 218 });
-        private static readonly string CornerTopRight = Encoding850.GetString(new byte[] { 191 });
-        private static readonly string CornerBottomLeft = Encoding850.GetString(new byte[] { 192 });
-        private static readonly string CornerBottomRight = Encoding850.GetString(new byte[] { 217 });
-        private static readonly string CentreHorizontal = Encoding850.GetString(new byte[] { 196 });
-        private static readonly string CentreVertical = Encoding850.GetString(new byte[] { 179 });
-        private static readonly string VerticalAndRight = Encoding850.GetString(new byte[] { 195 });
-        private static readonly string VerticalAndLeft = Encoding850.GetString(new byte[] { 180 });
-        private static readonly string HorizontalAndUp = Encoding850.GetString(new byte[] { 193 });
-        private static readonly string HorizontalAndDown = Encoding850.GetString(new byte[] { 194 });
-        private static readonly string HorizontalAndVertical = Encoding850.GetString(new byte[] { 197 });
+        private static readonly Encoding UTF8Encoding = Encoding.Unicode;
+        private static readonly string CornerTopLeft = UTF8Encoding.GetString(new byte[] { 218 });
+        private static readonly string CornerTopRight = UTF8Encoding.GetString(new byte[] { 191 });
+        private static readonly string CornerBottomLeft = UTF8Encoding.GetString(new byte[] { 192 });
+        private static readonly string CornerBottomRight = UTF8Encoding.GetString(new byte[] { 217 });
+        private static readonly string CentreHorizontal = UTF8Encoding.GetString(new byte[] { 196 });
+        private static readonly string CentreVertical = UTF8Encoding.GetString(new byte[] { 179 });
+        private static readonly string VerticalAndRight = UTF8Encoding.GetString(new byte[] { 195 });
+        private static readonly string VerticalAndLeft = UTF8Encoding.GetString(new byte[] { 180 });
+        private static readonly string HorizontalAndUp = UTF8Encoding.GetString(new byte[] { 193 });
+        private static readonly string HorizontalAndDown = UTF8Encoding.GetString(new byte[] { 194 });
+        private static readonly string HorizontalAndVertical = UTF8Encoding.GetString(new byte[] { 197 });
 
         private void DrawRow(int row)
         {

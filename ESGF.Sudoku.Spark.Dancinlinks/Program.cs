@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using DlxLib;
 using System.IO;
+using System.Text;
 
 
 namespace ESGF.Sudoku.Spark.Dancinlinks
@@ -12,11 +13,8 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
     {
         //static readonly string _dataPath = Path.Combine("/Users/yassine/Documents/GitHub/5ESGF-BD-2021/", "sudoku.csv");
 
-
         private static void Main()
         {
-
-
 
             // http://puzzles.telegraph.co.uk/site/search_puzzle_number?id=27744
             var grid = new Grid(ImmutableList.Create(
