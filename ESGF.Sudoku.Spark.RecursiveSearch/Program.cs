@@ -1,16 +1,24 @@
 ﻿using System;
-using DlxLib;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using DlxLib;
+using System.IO;
+using Microsoft.ML;
+using Microsoft.ML.Data;
+using static Microsoft.ML.DataOperationsCatalog;
+using Microsoft.ML.Trainers;
+using Microsoft.ML.Transforms.Text;
 
 namespace ESGF.Sudoku.Spark.RecursiveSearch
-
 {
     internal static class Program
     {
+        static readonly string _dataPath = Path.Combine("/Users/yassine/Documents/GitHub/5ESGF-BD-2021/", "sudoku.csv");
+
         private static void Main()
         {
+
             // http://puzzles.telegraph.co.uk/site/search_puzzle_number?id=27744
             var grid = new Grid(ImmutableList.Create(
                 "6 4 9 7 3",
