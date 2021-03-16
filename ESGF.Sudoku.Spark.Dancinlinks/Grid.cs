@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 
-namespace ESGF.Sudoku.Spark.RecursiveSearch
+namespace ESGF.Sudoku.Spark.Dancinlinks
 
 {
     public class Grid
@@ -27,11 +27,11 @@ namespace ESGF.Sudoku.Spark.RecursiveSearch
 
                 if (rowString.Length != 9) throw new ArgumentException(nameof(rowStrings));
 
-                //foreach (var ch in rowString)
-                //{
-                //    if (!ValidChars.Contains(ch)) throw new ArgumentException(nameof(rowStrings));
-                //    row.Add(ch == SpaceCharacter ? 0 : ch - ZeroCharacter);
-                //}
+                foreach (var ch in rowString)
+                {
+                    if (!ValidChars.Contains(ch)) throw new ArgumentException(nameof(rowStrings));
+                    row.Add(ch == SpaceCharacter ? 0 : ch - ZeroCharacter);
+                }
 
                 rows.Add(row.ToImmutableList());
             }
@@ -52,19 +52,19 @@ namespace ESGF.Sudoku.Spark.RecursiveSearch
 
         public void Draw()
         {
-            DrawSeparatorLine(CornerTopLeft, CornerTopRight, HorizontalAndDown);
+            //DrawSeparatorLine(CornerTopLeft, CornerTopRight, HorizontalAndDown);
             DrawRow(0);
             DrawRow(1);
             DrawRow(2);
-            DrawSeparatorLine(VerticalAndRight, VerticalAndLeft, HorizontalAndVertical);
+            //DrawSeparatorLine(VerticalAndRight, VerticalAndLeft, HorizontalAndVertical);
             DrawRow(3);
             DrawRow(4);
             DrawRow(5);
-            DrawSeparatorLine(VerticalAndRight, VerticalAndLeft, HorizontalAndVertical);
+            //DrawSeparatorLine(VerticalAndRight, VerticalAndLeft, HorizontalAndVertical);
             DrawRow(6);
             DrawRow(7);
             DrawRow(8);
-            DrawSeparatorLine(CornerBottomLeft, CornerBottomRight, HorizontalAndUp);
+            //DrawSeparatorLine(CornerBottomLeft, CornerBottomRight, HorizontalAndUp);
         }
 
         private static readonly Encoding Encoding850 = Encoding.GetEncoding(850);
@@ -85,7 +85,7 @@ namespace ESGF.Sudoku.Spark.RecursiveSearch
             var part1 = FormatThreeValues(row, 0);
             var part2 = FormatThreeValues(row, 3);
             var part3 = FormatThreeValues(row, 6);
-            DrawLine(CentreVertical, CentreVertical, CentreVertical, part1, part2, part3);
+            //DrawLine(CentreVertical, CentreVertical, CentreVertical, part1, part2, part3);
         }
 
         private string FormatThreeValues(int row, int skip)
