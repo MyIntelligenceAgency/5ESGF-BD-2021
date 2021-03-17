@@ -5,51 +5,84 @@ using System.Linq;
 using DlxLib;
 using System.IO;
 using System.Text;
-
+using System.Collections;
 
 namespace ESGF.Sudoku.Spark.Dancinlinks
 {
     internal static class Program
     {
-        //static readonly string _dataPath = Path.Combine("/Users/yassine/Documents/GitHub/5ESGF-BD-2021/", "sudoku.csv");
+        static readonly string _filePath = Path.Combine("/Users/yassine/Documents/GitHub/5ESGF-BD-2021/", "sudoku.csv");
 
         private static void Main()
         {
 
-            // http://puzzles.telegraph.co.uk/site/search_puzzle_number?id=27744
-            var grid = new Grid(ImmutableList.Create(
-                "6 4 9 7 3",
-                "  3    6 ",
-                "       18",
-                "   18   9",
-                "     43  ",
-                "7   39   ",
-                " 7       ",
-                " 4    8  ",
-                "9 8 6 4 5"));
+            var sudokus = new List<string>();
 
-            grid.Draw();
-
-            var internalRows = BuildInternalRowsForGrid(grid);
-            var dlxRows = BuildDlxRows(internalRows);
-            var solutions = new Dlx()
-                .Solve(dlxRows, d => d, r => r)
-                .Where(solution => VerifySolution(internalRows, solution))
-                .ToImmutableList();
-
-            Console.WriteLine();
-
-            if (solutions.Any())
+            foreach (var fileLine in File.ReadLines(_filePath))
             {
-                Console.WriteLine($"First solution (of {solutions.Count}):");
-                Console.WriteLine();
-                DrawSolution(internalRows, solutions.First());
-                Console.WriteLine();
+               // Console.WriteLine(fileLine);
+
+                sudokus.Add(fileLine);
             }
-            else
+
+            int i = 0;
+            foreach (string sudoku in sudokus)
             {
-                Console.WriteLine("No solutions found!");
+
+                //var sudokus1 = new List<string>();
+
+                //Console.WriteLine(sudoku);
+                //sudokus1.Add(sudoku.Substring(0, 9));
+                //sudokus1.Add(sudoku.Substring(8, 9));
+                //sudokus1.Add(sudoku.Substring(17, 9));
+                //sudokus1.Add(sudoku.Substring(26, 9));
+                //sudokus1.Add(sudoku.Substring(35, 9));
+                //sudokus1.Add(sudoku.Substring(44, 9));
+                //sudokus1.Add(sudoku.Substring(53, 9));
+                //sudokus1.Add(sudoku.Substring(62, 9));
+                //sudokus1.Add(sudoku.Substring(71, 9));
+
+                i = i + 1;
+
+                Console.WriteLine("sudoku n°" + i);
+
+                var grid = new Grid(ImmutableList.Create(
+                sudoku.Substring(0, 9),
+                sudoku.Substring(9, 9),
+                sudoku.Substring(18, 9),
+                sudoku.Substring(27, 9),
+                sudoku.Substring(36, 9),
+                sudoku.Substring(45, 9),
+                sudoku.Substring(54, 9),
+                sudoku.Substring(63, 9),
+                sudoku.Substring(72, 9)));
+
+
+                //grid.Draw();
+
+                var internalRows = BuildInternalRowsForGrid(grid);
+                var dlxRows = BuildDlxRows(internalRows);
+                var solutions = new Dlx()
+                    .Solve(dlxRows, d => d, r => r)
+                    .Where(solution => VerifySolution(internalRows, solution))
+                    .ToImmutableList();
+
+                Console.WriteLine();
+
+                if (solutions.Any())
+                {
+                    Console.WriteLine($"First solution (of {solutions.Count}):");
+                    Console.WriteLine();
+                    DrawSolution(internalRows, solutions.First());
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine("No solutions found!");
+                }
             }
+
+
         }
 
         private static IEnumerable<int> Rows => Enumerable.Range(0, 9);

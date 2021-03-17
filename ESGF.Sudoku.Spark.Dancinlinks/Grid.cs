@@ -67,21 +67,17 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             DrawSeparatorLine(CornerBottomLeft, CornerBottomRight, HorizontalAndUp);
         }
 
-
-        //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
-        private static readonly Encoding UTF8Encoding = Encoding.Unicode;
-        private static readonly string CornerTopLeft = UTF8Encoding.GetString(new byte[] { 218 });
-        private static readonly string CornerTopRight = UTF8Encoding.GetString(new byte[] { 191 });
-        private static readonly string CornerBottomLeft = UTF8Encoding.GetString(new byte[] { 192 });
-        private static readonly string CornerBottomRight = UTF8Encoding.GetString(new byte[] { 217 });
-        private static readonly string CentreHorizontal = UTF8Encoding.GetString(new byte[] { 196 });
-        private static readonly string CentreVertical = UTF8Encoding.GetString(new byte[] { 179 });
-        private static readonly string VerticalAndRight = UTF8Encoding.GetString(new byte[] { 195 });
-        private static readonly string VerticalAndLeft = UTF8Encoding.GetString(new byte[] { 180 });
-        private static readonly string HorizontalAndUp = UTF8Encoding.GetString(new byte[] { 193 });
-        private static readonly string HorizontalAndDown = UTF8Encoding.GetString(new byte[] { 194 });
-        private static readonly string HorizontalAndVertical = UTF8Encoding.GetString(new byte[] { 197 });
+        private static readonly string CornerTopLeft = "-";
+        private static readonly string CornerTopRight = "-";
+        private static readonly string CornerBottomLeft = "-";
+        private static readonly string CornerBottomRight = "-";
+        private static readonly string CentreHorizontal = "-";
+        private static readonly string CentreVertical = "⎜";
+        private static readonly string VerticalAndRight = "⎜";
+        private static readonly string VerticalAndLeft = "⎜";
+        private static readonly string HorizontalAndUp = "-";
+        private static readonly string HorizontalAndDown = "-";
+        private static readonly string HorizontalAndVertical = "-";
 
         private void DrawRow(int row)
         {
