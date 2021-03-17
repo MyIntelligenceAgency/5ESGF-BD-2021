@@ -11,7 +11,7 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 {
     internal static class Program
     {
-        static readonly string _filePath = Path.Combine("/Users/yassine/Documents/GitHub/5ESGF-BD-2021/", "sudoku.csv");
+        static readonly string _filePath = Path.Combine("/Users/yassine/Documents/GitHub/5ESGF-BD-2021/ESGF.Sudoku.Spark.Dancinlinks/", "sudoku.csv");
 
         private static void Main()
         {
@@ -20,7 +20,6 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
             foreach (var fileLine in File.ReadLines(_filePath))
             {
-               // Console.WriteLine(fileLine);
 
                 sudokus.Add(fileLine);
             }
@@ -28,21 +27,7 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             int i = 0;
             foreach (string sudoku in sudokus)
             {
-
-                //var sudokus1 = new List<string>();
-
-                //Console.WriteLine(sudoku);
-                //sudokus1.Add(sudoku.Substring(0, 9));
-                //sudokus1.Add(sudoku.Substring(8, 9));
-                //sudokus1.Add(sudoku.Substring(17, 9));
-                //sudokus1.Add(sudoku.Substring(26, 9));
-                //sudokus1.Add(sudoku.Substring(35, 9));
-                //sudokus1.Add(sudoku.Substring(44, 9));
-                //sudokus1.Add(sudoku.Substring(53, 9));
-                //sudokus1.Add(sudoku.Substring(62, 9));
-                //sudokus1.Add(sudoku.Substring(71, 9));
-
-                i = i + 1;
+                i += 1;
 
                 Console.WriteLine("sudoku n°" + i);
 
