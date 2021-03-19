@@ -44,8 +44,8 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             SparkSession spark = SparkSession
                 .Builder()
                 .AppName("Resolution of sudokus using DlxLib with " + cores + " cores and " + nodes + " instances")
-                //.Config("spark.executor.cores", cores)
-                //.Config("spark.executor.instances", nodes)
+                .Config("spark.executor.cores", cores)
+                .Config("spark.executor.instances", nodes)
                 .GetOrCreate();
 
             DataFrame df = spark
