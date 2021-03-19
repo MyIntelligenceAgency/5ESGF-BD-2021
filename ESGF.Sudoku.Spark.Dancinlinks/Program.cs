@@ -24,18 +24,18 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
             watch.Start();
 
-            sudokures("1", "1", 3000);
+            sudokures("1", "1", 300);
 
             watch.Stop();
 
             watch2.Start();
 
-            sudokures("1", "4", 3000);
+            sudokures("1", "4", 300);
 
             watch2.Stop();
 
             Console.WriteLine($"Execution Time with 1 core and 1 instance: {watch.ElapsedMilliseconds} ms");
-            Console.WriteLine($"Execution Time with 1 core and 4 instances: {watch.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Execution Time with 1 core and 4 instances: {watch2.ElapsedMilliseconds} ms");
 
         }
 
@@ -43,9 +43,9 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
         {
             SparkSession spark = SparkSession
                 .Builder()
-                .AppName("Resolution of 3000 sudokus using DlxLib with " + cores + " cores and " + nodes + " instances")
-                .Config("spark.executor.cores", cores)
-                .Config("spark.executor.instances", nodes)
+                .AppName("Resolution of sudokus using DlxLib with " + cores + " cores and " + nodes + " instances")
+                //.Config("spark.executor.cores", cores)
+                //.Config("spark.executor.instances", nodes)
                 .GetOrCreate();
 
             DataFrame df = spark
