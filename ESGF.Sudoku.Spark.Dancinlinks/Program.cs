@@ -6,6 +6,10 @@ using DlxLib;
 using System.IO;
 using System.Text;
 using System.Collections;
+using Microsoft.Spark;
+using Microsoft.Spark.Sql;
+using Microsoft.Spark.Sql.Types;
+using static Microsoft.Spark.Sql.Functions;
 
 namespace ESGF.Sudoku.Spark.Dancinlinks
 {
@@ -15,21 +19,62 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
         private static void Main()
         {
+            var watch = new System.Diagnostics.Stopwatch();
+            var watch2 = new System.Diagnostics.Stopwatch();
 
-            var sudokus = new List<string>();
+            watch.Start();
 
-            foreach (var fileLine in File.ReadLines(_filePath))
-            {
+            sudokures("1", "1", 3000);
 
-                sudokus.Add(fileLine);
-            }
+            watch.Stop();
+
+            watch2.Start();
+
+            sudokures("1", "4", 3000);
+
+            watch2.Stop();
+
+            Console.WriteLine($"Execution Time with 1 core and 1 instance: {watch.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Execution Time with 1 core and 4 instances: {watch.ElapsedMilliseconds} ms");
+
+        }
+
+        private static void sudokures(string cores, string nodes, int nrows)
+        {
+            SparkSession spark = SparkSession
+                .Builder()
+                .AppName("Resolution of 3000 sudokus using DlxLib with " + cores + " cores and " + nodes + " instances")
+                .Config("spark.executor.cores", cores)
+                .Config("spark.executor.instances", nodes)
+                .GetOrCreate();
+
+            DataFrame df = spark
+                .Read()
+                .Option("header", false)
+                .Option("inferSchema", true)
+                .Csv(_filePath);
+
+            //df.Show();
+            //DataFrame df2 = df.Limit(nrows);
+
+            IEnumerable<Row> rows = df.Limit(nrows).Collect();
+
+            //List<string> sudokus = new List<string>();
+
+            //foreach (Row row in rows)
+            //{
+
+            //    sudokus.Add(row);
+            //}
 
             int i = 0;
-            foreach (string sudoku in sudokus)
+
+            foreach (Row row in rows)
             {
                 i += 1;
-
                 Console.WriteLine("sudoku n°" + i);
+
+                string sudoku = row.GetAs<string>(0);
 
                 var grid = new Grid(ImmutableList.Create(
                 sudoku.Substring(0, 9),
@@ -41,9 +86,6 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
                 sudoku.Substring(54, 9),
                 sudoku.Substring(63, 9),
                 sudoku.Substring(72, 9)));
-
-
-                //grid.Draw();
 
                 var internalRows = BuildInternalRowsForGrid(grid);
                 var dlxRows = BuildDlxRows(internalRows);
@@ -67,6 +109,7 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
                 }
             }
 
+            spark.Stop();
 
         }
 
