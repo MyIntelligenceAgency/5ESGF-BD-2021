@@ -19,21 +19,28 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
         private static void Main()
         {
-            // A dé-commenter pour le temps d'execution global (chargement du CSV + création DF et sparksession)
-            //var watch = new System.Diagnostics.Stopwatch();
-            //var watch2 = new System.Diagnostics.Stopwatch();
-            //watch.Start();
+            //temps d'execution global (chargement du CSV + création DF et sparksession)
+            var watch = new System.Diagnostics.Stopwatch();
+            var watch1 = new System.Diagnostics.Stopwatch();
+            watch.Start();
 
-            Sudokures("1", "1", 300);
+            Sudokures("1", "1", 5000);
 
-            //watch.Stop();
-            //watch2.Start();
+            watch.Stop();
+            watch1.Start();
 
-            Sudokures("1", "4", 300);
+            Sudokures("1", "4", 5000);
 
-            //watch2.Stop();
-            //Console.WriteLine($"Execution Time with 1 core and 1 instance: {watch.ElapsedMilliseconds} ms");
-            //Console.WriteLine($"Execution Time with 1 core and 4 instances: {watch2.ElapsedMilliseconds} ms");
+            watch1.Stop();
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine($"Global Execution (CSV + DF + SparkSession) Time with 1 core and 1 instance: {watch.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Global Execution (CSV + DF + SparkSession) Time with 1 core and 4 instances: {watch1.ElapsedMilliseconds} ms");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
 
         }
 
@@ -53,8 +60,8 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
                 .Csv(_filePath);
 
             //Watch seulement pour la résolution des sudokus
-            var watch = new System.Diagnostics.Stopwatch();
-            watch.Start();
+            var watch2 = new System.Diagnostics.Stopwatch();
+            watch2.Start();
 
             DataFrame df2 = df.Limit(nrows);
 
@@ -66,9 +73,17 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             DataFrame sqlDf = spark.Sql("SELECT Sudokus, SukoduUDF(Sudokus) as Resolution from Resolved");
             sqlDf.Show();
 
-            watch.Stop();
+            watch2.Stop();
 
-            Console.WriteLine($"Execution Time with " + cores + " core and " + nodes + " instance: " + watch.ElapsedMilliseconds + " ms");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine($"Execution Time for sudoku resolution with " + cores + " core and " + nodes + " instance: " + watch2.ElapsedMilliseconds + " ms");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
 
             spark.Stop();
 
