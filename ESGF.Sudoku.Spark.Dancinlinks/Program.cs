@@ -63,7 +63,7 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
                 (sudoku) => Sudokusolution(sudoku));
 
             df2.CreateOrReplaceTempView("Resolved");
-            DataFrame sqlDf = spark.Sql("SELECT Sudokus, SukoduUDF(Sudokus) as Status from Resolved");
+            DataFrame sqlDf = spark.Sql("SELECT Sudokus, SukoduUDF(Sudokus) as Resolution from Resolved");
             sqlDf.Show();
 
             watch.Stop();
@@ -99,13 +99,21 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
                 if (solutions.Any())
                 {
-                    //Enlever commentaire pour afficher les solutions
+                //Enlever commentaire pour afficher les solutions
 
-                    //Console.WriteLine($"First solution (of {solutions.Count}):");
-                    //Console.WriteLine();
-                    //SolutionToGrid(internalRows, solutions.First()).Draw();
-                    //Console.WriteLine();
-                    return "resolved";
+                //Console.WriteLine($"First solution (of {solutions.Count}):");
+                //Console.WriteLine();
+                //SolutionToGrid(internalRows, solutions.First()).Draw();
+                //Console.WriteLine();
+                string s = "";
+
+                for (int i = 0; i <= 8; i++) {
+                    for (int j = 0; j <= 8; j++)
+                    {
+                        s += SolutionToGrid(internalRows, solutions.First()).ValueAt(i, j).ToString();
+                    }
+                }
+                return s;
                 }
                 else
                 {
