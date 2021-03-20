@@ -19,9 +19,24 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
         private static void Main()
         {
+            // A dé-commenter pour le temps d'execution global (chargement du CSV + création DF et sparksession)
+            //var watch = new System.Diagnostics.Stopwatch();
+            //var watch2 = new System.Diagnostics.Stopwatch();
 
-            sudokures("1", "1", 100);
-            sudokures("4", "4", 100);
+            //watch.Start();
+
+            sudokures("1", "1", 300);
+
+            //watch.Stop();
+
+            //watch2.Start();
+
+            sudokures("1", "4", 300);
+
+            //watch2.Stop();
+
+            //Console.WriteLine($"Execution Time with 1 core and 1 instance: {watch.ElapsedMilliseconds} ms");
+            //Console.WriteLine($"Execution Time with 1 core and 4 instances: {watch2.ElapsedMilliseconds} ms");
 
         }
 
@@ -40,6 +55,7 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
                 .Option("inferSchema", true)
                 .Csv(_filePath);
 
+            //Watch seulement pour la résolution des sudokus
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
 
