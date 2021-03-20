@@ -24,12 +24,12 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             //var watch2 = new System.Diagnostics.Stopwatch();
             //watch.Start();
 
-            sudokures("1", "1", 300);
+            Sudokures("1", "1", 300);
 
             //watch.Stop();
             //watch2.Start();
 
-            sudokures("1", "4", 300);
+            Sudokures("1", "4", 300);
 
             //watch2.Stop();
             //Console.WriteLine($"Execution Time with 1 core and 1 instance: {watch.ElapsedMilliseconds} ms");
@@ -37,7 +37,7 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
         }
 
-        private static void sudokures(string cores, string nodes, int nrows)
+        private static void Sudokures(string cores, string nodes, int nrows)
         {
             SparkSession spark = SparkSession
                 .Builder()
