@@ -63,7 +63,7 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
                 (sudoku) => Sudokusolution(sudoku));
 
             df2.CreateOrReplaceTempView("Resolved");
-            DataFrame sqlDf = spark.Sql("SELECT S, SukoduUDF(S) as Status from Resolved");
+            DataFrame sqlDf = spark.Sql("SELECT Sudokus, SukoduUDF(Sudokus) as Status from Resolved");
             sqlDf.Show();
 
             watch.Stop();
