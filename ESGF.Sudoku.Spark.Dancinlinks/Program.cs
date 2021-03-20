@@ -22,19 +22,16 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             // A dé-commenter pour le temps d'execution global (chargement du CSV + création DF et sparksession)
             //var watch = new System.Diagnostics.Stopwatch();
             //var watch2 = new System.Diagnostics.Stopwatch();
-
             //watch.Start();
 
             sudokures("1", "1", 300);
 
             //watch.Stop();
-
             //watch2.Start();
 
             sudokures("1", "4", 300);
 
             //watch2.Stop();
-
             //Console.WriteLine($"Execution Time with 1 core and 1 instance: {watch.ElapsedMilliseconds} ms");
             //Console.WriteLine($"Execution Time with 1 core and 4 instances: {watch2.ElapsedMilliseconds} ms");
 
@@ -68,7 +65,6 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             df2.CreateOrReplaceTempView("Resolved");
             DataFrame sqlDf = spark.Sql("SELECT S, SukoduUDF(S) as Status from Resolved");
             sqlDf.Show();
-
 
             watch.Stop();
 
@@ -104,6 +100,7 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
                 if (solutions.Any())
                 {
                     //Enlever commentaire pour afficher les solutions
+
                     //Console.WriteLine($"First solution (of {solutions.Count}):");
                     //Console.WriteLine();
                     //SolutionToGrid(internalRows, solutions.First()).Draw();
@@ -245,20 +242,6 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
                 .Select(value => string.Concat(value))
                 .ToImmutableList();
             return new Grid(rowStrings);
-        }
-
-        private static string SolutionToGrid2(
-            IReadOnlyList<Tuple<int, int, int, bool>> internalRows,
-            Solution solution)
-        {
-            var rowStrings = solution.RowIndexes
-                .Select(rowIndex => internalRows[rowIndex])
-                .OrderBy(t => t.Item1)
-                .ThenBy(t => t.Item2)
-                .GroupBy(t => t.Item1, t => t.Item3)
-                .Select(value => string.Concat(value))
-                .ToImmutableList();
-            return rowStrings.ToString();
         }
 
     }
