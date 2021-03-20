@@ -19,23 +19,9 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
         private static void Main()
         {
-            var watch = new System.Diagnostics.Stopwatch();
-            var watch2 = new System.Diagnostics.Stopwatch();
 
-            watch.Start();
-
-            sudokures("1", "1", 300);
-
-            watch.Stop();
-
-            watch2.Start();
-
-            sudokures("1", "4", 300);
-
-            watch2.Stop();
-
-            Console.WriteLine($"Execution Time with 1 core and 1 instance: {watch.ElapsedMilliseconds} ms");
-            Console.WriteLine($"Execution Time with 1 core and 4 instances: {watch2.ElapsedMilliseconds} ms");
+            sudokures("1", "1", 100);
+            sudokures("4", "4", 100);
 
         }
 
@@ -50,31 +36,34 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
             DataFrame df = spark
                 .Read()
-                .Option("header", false)
+                .Option("header", true)
                 .Option("inferSchema", true)
                 .Csv(_filePath);
 
-            //df.Show();
-            //DataFrame df2 = df.Limit(nrows);
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
 
-            IEnumerable<Row> rows = df.Limit(nrows).Collect();
+            DataFrame df2 = df.Limit(nrows);
 
-            //List<string> sudokus = new List<string>();
+            spark.Udf().Register<string, string>(
+                "SukoduUDF",
+                (sudoku) => Sudokusolution(sudoku));
 
-            //foreach (Row row in rows)
-            //{
+            df2.CreateOrReplaceTempView("Resolved");
+            DataFrame sqlDf = spark.Sql("SELECT S, SukoduUDF(S) as Status from Resolved");
+            sqlDf.Show();
 
-            //    sudokus.Add(row);
-            //}
 
-            int i = 0;
+            watch.Stop();
 
-            foreach (Row row in rows)
-            {
-                i += 1;
-                Console.WriteLine("sudoku n°" + i);
+            Console.WriteLine($"Execution Time with " + cores + " core and " + nodes + " instance: " + watch.ElapsedMilliseconds + " ms");
 
-                string sudoku = row.GetAs<string>(0);
+            spark.Stop();
+
+        }
+
+        public static string Sudokusolution(string sudoku)
+        {
 
                 var grid = new Grid(ImmutableList.Create(
                 sudoku.Substring(0, 9),
@@ -89,29 +78,30 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
                 var internalRows = BuildInternalRowsForGrid(grid);
                 var dlxRows = BuildDlxRows(internalRows);
-                var solutions = new Dlx()
-                    .Solve(dlxRows, d => d, r => r)
-                    .Where(solution => VerifySolution(internalRows, solution))
-                    .ToImmutableList();
 
-                Console.WriteLine();
+
+                var solutions = new Dlx()
+                .Solve(BuildDlxRows(internalRows), d => d, r => r)
+                .Where(solution => VerifySolution(internalRows, solution))
+                .ToImmutableList();
 
                 if (solutions.Any())
                 {
-                    Console.WriteLine($"First solution (of {solutions.Count}):");
-                    Console.WriteLine();
-                    DrawSolution(internalRows, solutions.First());
-                    Console.WriteLine();
+                    //Enlever commentaire pour afficher les solutions
+                    //Console.WriteLine($"First solution (of {solutions.Count}):");
+                    //Console.WriteLine();
+                    //SolutionToGrid(internalRows, solutions.First()).Draw();
+                    //Console.WriteLine();
+                    return "resolved";
                 }
                 else
                 {
-                    Console.WriteLine("No solutions found!");
+                    //Console.WriteLine("No solutions found!");
+                    return "No solutions found!";
                 }
-            }
-
-            spark.Stop();
-
+        
         }
+
 
         private static IEnumerable<int> Rows => Enumerable.Range(0, 9);
         private static IEnumerable<int> Cols => Enumerable.Range(0, 9);
@@ -241,11 +231,19 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             return new Grid(rowStrings);
         }
 
-        private static void DrawSolution(
+        private static string SolutionToGrid2(
             IReadOnlyList<Tuple<int, int, int, bool>> internalRows,
             Solution solution)
         {
-            SolutionToGrid(internalRows, solution).Draw();
+            var rowStrings = solution.RowIndexes
+                .Select(rowIndex => internalRows[rowIndex])
+                .OrderBy(t => t.Item1)
+                .ThenBy(t => t.Item2)
+                .GroupBy(t => t.Item1, t => t.Item3)
+                .Select(value => string.Concat(value))
+                .ToImmutableList();
+            return rowStrings.ToString();
         }
+
     }
 }
