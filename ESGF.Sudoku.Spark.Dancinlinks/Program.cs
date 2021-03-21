@@ -4,32 +4,29 @@ using System.Collections.Immutable;
 using System.Linq;
 using DlxLib;
 using System.IO;
-using System.Text;
-using System.Collections;
-using Microsoft.Spark;
 using Microsoft.Spark.Sql;
-using Microsoft.Spark.Sql.Types;
-using static Microsoft.Spark.Sql.Functions;
 
 namespace ESGF.Sudoku.Spark.Dancinlinks
 {
     internal static class Program
     {
+        //Path du fichier csv avec 1 000 000 sudokus.
         static readonly string _filePath = Path.Combine("/Users/yassine/Documents/GitHub/5ESGF-BD-2021/ESGF.Sudoku.Spark.Dancinlinks/", "sudoku.csv");
 
-        private static void Main()
-        {
+        private static void Main(){
             //temps d'execution global (chargement du CSV + création DF et sparksession)
             var watch = new System.Diagnostics.Stopwatch();
             var watch1 = new System.Diagnostics.Stopwatch();
             watch.Start();
 
-            Sudokures("1", "1", 5000);
+            //Appel de la méthode, spark session avec 1 noyau et 1 instance, 1000 sudokus à résoudre
+            Sudokures("1", "1", 1000);
 
             watch.Stop();
             watch1.Start();
 
-            Sudokures("1", "4", 5000);
+            //Appel de la méthode, spark session avec 1 noyau et 4 instance, 1000 sudokus à résoudre
+            Sudokures("1", "4", 1000);
 
             watch1.Stop();
 
@@ -44,15 +41,17 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
         }
 
-        private static void Sudokures(string cores, string nodes, int nrows)
-        {
+        //Méthode qui est appelée depuis le main pour lancer une session spark avec un nombbre de noyaux et d'instances différents et lancer la résolution du soduku grace à la méthode Sudokusolution().
+        private static void Sudokures(string cores, string nodes, int nrows){
+            // Initialisation de la session Spark
             SparkSession spark = SparkSession
                 .Builder()
-                .AppName("Resolution of sudokus using DlxLib with " + cores + " cores and " + nodes + " instances")
+                .AppName("Resolution of "+ nrows + " sudokus using DlxLib with " + cores + " cores and " + nodes + " instances")
                 .Config("spark.executor.cores", cores)
                 .Config("spark.executor.instances", nodes)
                 .GetOrCreate();
 
+            // Intégration du csv dans un dataframe
             DataFrame df = spark
                 .Read()
                 .Option("header", true)
@@ -63,12 +62,15 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             var watch2 = new System.Diagnostics.Stopwatch();
             watch2.Start();
 
+            //limit du dataframe avec un nombre de ligne prédéfini lors de l'appel de la fonction
             DataFrame df2 = df.Limit(nrows);
 
+            // Création de la spark User Defined Function
             spark.Udf().Register<string, string>(
                 "SukoduUDF",
                 (sudoku) => Sudokusolution(sudoku));
 
+            // Appel de l'UDF dans un nouveau dataframe spark qui contiendra les résultats aussi
             df2.CreateOrReplaceTempView("Resolved");
             DataFrame sqlDf = spark.Sql("SELECT Sudokus, SukoduUDF(Sudokus) as Resolution from Resolved");
             sqlDf.Show();
@@ -79,7 +81,7 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine($"Execution Time for sudoku resolution with " + cores + " core and " + nodes + " instance: " + watch2.ElapsedMilliseconds + " ms");
+            Console.WriteLine($"Execution Time for " + nrows + " sudoku resolution with " + cores + " core and " + nodes + " instance: " + watch2.ElapsedMilliseconds + " ms");
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
@@ -89,9 +91,11 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
         }
 
-        public static string Sudokusolution(string sudoku)
-        {
+        //Création d'une méthode qui prend en entrée un string (le sudoku non résolu) et qui renvoie un string (le sudoku résolu).
+        //De base le code duquel on s'est inspiré ne renvoyait rien, la sortie était sous forme d'un Console.WriteLine()
+        private static string Sudokusolution(string sudoku){
 
+                //Récupération du sudoku à résoudre depuis le string en entrée et transfert dans une ImmutableList.
                 var grid = new Grid(ImmutableList.Create(
                 sudoku.Substring(0, 9),
                 sudoku.Substring(9, 9),
@@ -108,30 +112,28 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
 
                 var solutions = new Dlx()
-                .Solve(BuildDlxRows(internalRows), d => d, r => r)
-                .Where(solution => VerifySolution(internalRows, solution))
-                .ToImmutableList();
+                    .Solve(BuildDlxRows(internalRows), d => d, r => r)
+                    .Where(solution => VerifySolution(internalRows, solution))
+                    .ToImmutableList();
 
-                if (solutions.Any())
-                {
-                //Enlever commentaire pour afficher les solutions
+                if (solutions.Any()){
+                    //Enlever commentaire pour afficher les solutions dans la console
 
-                //Console.WriteLine($"First solution (of {solutions.Count}):");
-                //Console.WriteLine();
-                //SolutionToGrid(internalRows, solutions.First()).Draw();
-                //Console.WriteLine();
-                string s = "";
+                    //Console.WriteLine($"First solution (of {solutions.Count}):");
+                    //Console.WriteLine();
+                    //SolutionToGrid(internalRows, solutions.First()).Draw();
+                    //Console.WriteLine();
 
-                for (int i = 0; i <= 8; i++) {
-                    for (int j = 0; j <= 8; j++)
-                    {
-                        s += SolutionToGrid(internalRows, solutions.First()).ValueAt(i, j).ToString();
+                    //Ajout de ce bout de code pour avoir une sortie de type string contenant le sudoku résolu.
+                    string s = "";
+                    for (int i = 0; i <= 8; i++){
+                        for (int j = 0; j <= 8; j++){
+                            s += SolutionToGrid(internalRows, solutions.First()).ValueAt(i, j).ToString();
+                        }
                     }
-                }
-                return s;
-                }
-                else
-                {
+
+                    return s;
+                } else {
                     //Console.WriteLine("No solutions found!");
                     return "No solutions found!";
                 }
@@ -139,6 +141,7 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
         }
 
 
+        //Code non modifié pris sur le repo de résolution des sudoku avec dancinlinks
         private static IEnumerable<int> Rows => Enumerable.Range(0, 9);
         private static IEnumerable<int> Cols => Enumerable.Range(0, 9);
         private static IEnumerable<Tuple<int, int>> Locations =>

@@ -67,6 +67,7 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             DrawSeparatorLine(CornerBottomLeft, CornerBottomRight, HorizontalAndUp);
         }
 
+        //Modification par rapport au code original pour résoudre un problème d'encodage. Passage en signes UTF-8.
         private static readonly string CornerTopLeft = "-";
         private static readonly string CornerTopRight = "-";
         private static readonly string CornerBottomLeft = "-";
@@ -78,6 +79,7 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
         private static readonly string HorizontalAndUp = "-";
         private static readonly string HorizontalAndDown = "-";
         private static readonly string HorizontalAndVertical = "-";
+        //Fin de la modification
 
         private void DrawRow(int row)
         {
