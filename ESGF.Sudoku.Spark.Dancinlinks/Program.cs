@@ -8,15 +8,15 @@ using Microsoft.Spark.Sql;
 
 namespace ESGF.Sudoku.Spark.Dancinlinks
 {
-    internal static class Program
-    {
+    public static class Program{
         //Path du fichier csv avec 1 000 000 sudokus.
         static readonly string _filePath = Path.Combine("/Users/yassine/Documents/GitHub/5ESGF-BD-2021/ESGF.Sudoku.Spark.Dancinlinks/", "sudoku.csv");
 
-        private static void Main(){
+        public static void Main(){
             //temps d'execution global (chargement du CSV + création DF et sparksession)
             var watch = new System.Diagnostics.Stopwatch();
             var watch1 = new System.Diagnostics.Stopwatch();
+
             watch.Start();
 
             //Appel de la méthode, spark session avec 1 noyau et 1 instance, 1000 sudokus à résoudre
@@ -58,12 +58,12 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
                 .Option("inferSchema", true)
                 .Csv(_filePath);
 
+            //limit du dataframe avec un nombre de ligne prédéfini lors de l'appel de la fonction
+            DataFrame df2 = df.Limit(nrows);
+
             //Watch seulement pour la résolution des sudokus
             var watch2 = new System.Diagnostics.Stopwatch();
             watch2.Start();
-
-            //limit du dataframe avec un nombre de ligne prédéfini lors de l'appel de la fonction
-            DataFrame df2 = df.Limit(nrows);
 
             // Création de la spark User Defined Function
             spark.Udf().Register<string, string>(
@@ -109,7 +109,6 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
 
                 var internalRows = BuildInternalRowsForGrid(grid);
                 var dlxRows = BuildDlxRows(internalRows);
-
 
                 var solutions = new Dlx()
                     .Solve(BuildDlxRows(internalRows), d => d, r => r)
