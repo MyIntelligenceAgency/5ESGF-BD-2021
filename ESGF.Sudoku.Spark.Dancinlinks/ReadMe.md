@@ -178,7 +178,7 @@ Ces dernières actions quant à elles sont entourées d'une variable Stopwatch q
 
     }
 ```
-#### 2.3 Initiationsation de la SparkSession depuis le main(), avec parmètres sur le nombre de sudokus, de noeuds et d'instances.
+#### 2.3 Initiationsation de la SparkSession depuis le main(), avec parmètres sur le nombre de sudokus, de cores et d'instances.
 
 La méthode Sudokures (qui elle même appelle Sudokusolution) est appelée depuis le main() deux fois, avec des paramètres différents. Deux Stopwatch ont aussi été créés pour mesurer le temps complet d'éxécution (création de la SparkSession, du DataFrame, de l'UDF, résolution des sudokus) et pouvoir benchmarker.
 
