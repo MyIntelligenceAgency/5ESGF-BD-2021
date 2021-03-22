@@ -244,15 +244,15 @@ Global Execution (CSV + DF + SparkSession) Time with 1 core and 4 instances: 682
 
 DacinLinks est déjà très rapide et bien optimisé pour résoudre les sudokus avec une différence entre (1 core et 1 instance) et (1 core et 4 instances) peu notable sur 300 sudokus, qui est a peine de l'ordre de 2s.
 
-La différence sur Global Execution Time quant à elle est de 12 secondes, on peut en conclure que la machine a plus rapidement lis et importé le fichier CSV.
+La différence sur Global Execution Time quant à elle est de 12 secondes, on peut en conclure que la machine a plus rapidement lu et importé le fichier CSV.
 
 Pour 1000 sudokus, la différence entre (1 core et 1 instance) et (1 core et 4 instances) passe à 5 secondes pour la résolution seulement, et sur le Global Execution Time elle est d'à peu près 12 secondes encore comme pour 300 sudokus.
 
-On en conclus que plus le nombre de sudoku à résoudre sera grand, plus la différence entre (1 core et 1 instance) et (1 core et 4 instances) sera notable. Malheureusement sur nos machines, résoudre 1 000 000 de sudoku aurait été trop long mais il serait intérésser de benchmarker ça sur un cluster/serveur plus puissant avec au moins 64 Go de RAM et un processeur plus puissant que nos Intel Core i5.
+On en conclu que plus le nombre de sudoku à résoudre sera grand, plus la différence entre (1 core et 1 instance) et (1 core et 4 instances) sera notable. Malheureusement sur nos machines, résoudre 1 000 000 de sudoku aurait été trop long mais il serait intérésser de benchmarker ça sur un cluster/serveur plus puissant avec au moins 64 Go de RAM et un processeur plus puissant que nos Intel Core i5.
 
 ### 4 - Code d'exécution dans le terminal (macOS) pour lancer le projet avec Spark-Submit
 
-#### À adapter avec les chemins correspondants aux fichiers dans la machine où le code va être exécuter
+#### À adapter avec les chemins correspondants aux fichiers dans la machine où le code va être exécuter EN PLUS du chemin pour le fichier csv (variable définie avant le main() dans Program.cs)
 
     export SPARK_HOME=/Users/yassine/Downloads/spark-3.0.1-bin-hadoop2.7
     
