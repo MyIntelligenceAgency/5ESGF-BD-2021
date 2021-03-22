@@ -178,7 +178,7 @@ Ces dernières actions quant à elles sont entourées d'une variable Stopwatch q
 
     }
 ```
-#### 2.3 Initiationsation de la SparkSession depuis le main(), avec parmètres sur le nombre de sudokus, de cores et d'instances.
+#### 2.3 Initiationsation de la SparkSession depuis le main(), avec paramètres sur le nombre de sudokus, de cores et d'instances.
 
 La méthode Sudokures (qui elle même appelle Sudokusolution) est appelée depuis le main() deux fois, avec des paramètres différents. Deux Stopwatch ont aussi été créés pour mesurer le temps complet d'éxécution (création de la SparkSession, du DataFrame, de l'UDF, résolution des sudokus) et pouvoir benchmarker.
 
@@ -252,7 +252,7 @@ On en conclu que plus le nombre de sudoku à résoudre sera grand, plus la diff�
 
 ### 4 - Code d'exécution dans le terminal (macOS) pour lancer le projet avec Spark-Submit
 
-#### À adapter avec les chemins correspondants aux fichiers dans la machine où le code va être exécuter EN PLUS du chemin pour le fichier csv (variable définie avant le main() dans Program.cs)
+#### À adapter avec les chemins correspondants aux fichiers dans la machine où le code va être exécuté EN PLUS du chemin pour le fichier csv (variable définie avant le main() dans Program.cs)
 
     export SPARK_HOME=/Users/yassine/Downloads/spark-3.0.1-bin-hadoop2.7
     
