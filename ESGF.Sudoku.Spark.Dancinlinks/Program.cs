@@ -17,24 +17,35 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             var watch = new System.Diagnostics.Stopwatch();
             var watch1 = new System.Diagnostics.Stopwatch();
 
+            //watch.Start();
+
+            ////Appel de la méthode, spark session avec 1 noyau et 1 instance, 1000 sudokus à résoudre
+            //Sudokures("1", "1", "512M", 1000);
+
+            //watch.Stop();
+
+
             watch.Start();
 
             //Appel de la méthode, spark session avec 1 noyau et 1 instance, 1000 sudokus à résoudre
-            Sudokures("1", "1", 1000);
+            Sudokures(1000);
 
             watch.Stop();
-            watch1.Start();
 
-            //Appel de la méthode, spark session avec 1 noyau et 4 instance, 1000 sudokus à résoudre
-            Sudokures("1", "4", 1000);
 
-            watch1.Stop();
+
+            //watch1.Start();
+
+            ////Appel de la méthode, spark session avec 1 noyau et 4 instance, 1000 sudokus à résoudre
+            //Sudokures("8", "24", "4G", 1000);
+
+            //watch1.Stop();
 
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine($"Global Execution (CSV + DF + SparkSession) Time with 1 core and 1 instance: {watch.ElapsedMilliseconds} ms");
-            Console.WriteLine($"Global Execution (CSV + DF + SparkSession) Time with 1 core and 4 instances: {watch1.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Global Execution (CSV + DF + SparkSession) Time: {watch.ElapsedMilliseconds} ms");
+            //Console.WriteLine($"Global Execution (CSV + DF + SparkSession) Time with 4 core and 12 instances: {watch1.ElapsedMilliseconds} ms");
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
@@ -42,14 +53,18 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
         }
 
         //Méthode qui est appelée depuis le main pour lancer une session spark avec un nombbre de noyaux et d'instances différents et lancer la résolution du soduku grace à la méthode Sudokusolution().
-        private static void Sudokures(string cores, string nodes, int nrows){
-            // Initialisation de la session Spark
-            SparkSession spark = SparkSession
+        //private static void Sudokures(string cores, string nodes, string mem, int nrows){
+        private static void Sudokures(int nrows){
+                // Initialisation de la session Spark
+                SparkSession spark = SparkSession
                 .Builder()
-                .AppName("Resolution of "+ nrows + " sudokus using DlxLib with " + cores + " cores and " + nodes + " instances")
-                .Config("spark.executor.cores", cores)
-                .Config("spark.executor.instances", nodes)
+                .Config("spark.executor.memory", "4G")
                 .GetOrCreate();
+            //.AppName("Resolution of " + nrows + " sudokus using DlxLib with " + cores + " cores and " + nodes + " instances")
+            //.Config("spark.driver.cores", cores)
+            //.Config("spark.executor.instances", nodes)
+            //.Config("spark.executor.memory", mem)
+            //.GetOrCreate();
 
             // Intégration du csv dans un dataframe
             DataFrame df = spark
@@ -81,7 +96,8 @@ namespace ESGF.Sudoku.Spark.Dancinlinks
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine($"Execution Time for " + nrows + " sudoku resolution with " + cores + " core and " + nodes + " instance: " + watch2.ElapsedMilliseconds + " ms");
+            Console.WriteLine($"Execution Time for " + nrows + " sudoku resolution : " + watch2.ElapsedMilliseconds + " ms");
+            //Console.WriteLine($"Execution Time for " + nrows + " sudoku resolution with " + cores + " core and " + nodes + " instance: " + watch2.ElapsedMilliseconds + " ms");
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
