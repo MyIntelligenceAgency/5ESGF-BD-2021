@@ -234,7 +234,7 @@ Deux tests ont été effectués, un avec 300 sudokus à résoudre, l'autre avec 
 
 Les résultats obtenus sont les suivants (voir fichier Excel dans la racine du projet ci le screenshot ne charge pas) :
 
-![Temps d'exécutions](https://raw.githubusercontent.com/yassik31/5ESGF-BD-2021/main/ESGF.Sudoku.Spark.Dancinlinks/)
+![Temps d'exécutions](https://raw.githubusercontent.com/yassik31/5ESGF-BD-2021/main/ESGF.Sudoku.Spark.Dancinlinks/Screenshot%202021-04-09%20at%2023.07.46.png)
 
 ###### Conclusion
 
