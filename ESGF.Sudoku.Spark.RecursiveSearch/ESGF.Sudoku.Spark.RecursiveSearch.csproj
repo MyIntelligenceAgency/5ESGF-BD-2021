@@ -8,5 +8,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Spark" Version="1.0.0" />
   </ItemGroup>
-
+	
+  <ItemGroup>
+    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
+  </ItemGroup>
 </Project>
